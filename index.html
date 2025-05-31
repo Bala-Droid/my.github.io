@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI模拟父母心声</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .interactive-section {
+            background-color: #3498db;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .file-upload {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #2980b9;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+        
+        .file-upload:hover {
+            background-color: #1a6ea0;
+        }
+        
+        button {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #d35400;
+        }
+        
+        .ai-message {
+            background-color: #2ecc71;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            text-align: left;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="interactive-section">
+        <h3>AI模拟父母心声</h3>
+        <p>上传父母照片，AI将模拟他们可能想对您说的话：</p>
+        
+        <label for="parentPhoto" class="file-upload">选择父母照片</label>
+        <input type="file" id="parentPhoto" accept="image/*">
+        
+        <img id="previewImage" class="preview-image" alt="预览图">
+        
+        <button onclick="generateAIMessage()">生成心声</button>
+        
+        <div class="ai-message" id="aiMessage"></div>
+    </div>
+
+    <script>
+        // 图片预览功能
+        document.getElementById('parentPhoto').addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var img = document.getElementById('previewImage');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 生成AI模拟消息
+        function generateAIMessage() {
+            var fileInput = document.getElementById('parentPhoto');
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('请先选择父母照片');
+                return;
+            }
+            
+            // 显示加载状态
+            var aiMessage = document.getElementById('aiMessage');
+            aiMessage.style.display = 'block';
+            aiMessage.innerHTML = '<div style="text-align:center;">AI正在分析照片并生成心声...</div>';
+            
+            // 模拟AI处理时间
+            setTimeout(function() {
+                var messages = [
+                    "孩子，最近工作忙吗？记得按时吃饭，别总点外卖。",
+                    "我们身体都挺好的，不用惦记。你什么时候有空回来？",
+                    "上次给你做的酱菜快吃完了吧？回来我再给你做些带回去。",
+                    "邻居王阿姨的孙子都会走路了，你一个人在外面要照顾好自己啊。",
+                    "家里的小狗最近总是望着门口，可能是在等你回来呢。",
+                    "天气预报说你那边要降温了，记得多穿点衣服。",
+                    "我和你爸最近学会了视频通话，你有空的时候教教我们怎么用那个表情包。",
+                    "冰箱里还冻着你爱吃的饺子，回来煮给你吃。",
+                    "最近睡得怎么样？别总是熬夜，对身体不好。",
+                    "家里一切都好，就是有点想你。",
+                    "你小时候最爱吃的红烧肉，我最近又改良了做法，回来尝尝？",
+                    "别总给我们买东西，我们什么都不缺，就缺你回家看看。",
+                    "你房间的被子我经常晒，随时回来都能住。",
+                    "工作别太拼了，钱是赚不完的，身体最重要。",
+                    "记得每天吃水果，你从小就不爱吃，现在没人提醒更不记得了吧？"
+                ];
+                
+                var randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                aiMessage.innerHTML = '<strong>AI模拟父母心声：</strong><br>' + randomMessage;
+                
+                // 添加重新生成按钮
+                aiMessage.innerHTML += '<br><button onclick="generateAIMessage()" style="margin-top:10px;padding:8px 15px;font-size:14px;">重新生成</button>';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
